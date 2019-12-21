@@ -82,7 +82,6 @@ public class UserServiceImpl implements IUserService {
             List<Coupon> dbCoupon = couponDao.findAllByUserIdAndStatus(userId, CouponStatus.of(status));
             if (CollectionUtils.isEmpty(dbCoupon)){
                 log.debug("current user not have coupon in db:{}, {}",userId,status);
-                templateClient.findAllUsableTemplate();
                 return dbCoupon;
             }
             //填充 dbCoupons 到 templateSdk 字段
