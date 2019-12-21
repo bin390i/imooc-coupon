@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+<!--    当前父模块的工程坐标-->
+    <groupId>com.imooc.coupon</groupId>
+    <artifactId>imooc-coupon</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+<!--    子模块创建成功，maven自动生成modules，用于父模块管理子模块-->
+    <modules>
+        <module>coupon-eureka</module>
+        <module>coupon-geteway</module>
+        <module>imooc-coupon-service</module>
+    </modules>
+
+    <name>imooc-coupon</name>
+    <description>SpringCloud Project For Imooc Coupon</description>
+
+<!--    项目打包类型，默认为jar ,对于聚合项目的父模块来说，必须指定为pom-->
+    <packaging>pom</packaging>
+
+    <!--    Spring Boot 的父级依赖,有了这个，当前的项目才是 Spring Boot 项目，spring-boot-starter-parent 是一个特殊的 starter ，
+          它用来提供相关的 Maven 默认依赖，使用它之后，常用的包依赖就可以省去 version 标签-->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.0.1.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+<!--    标志SpringCloud版本-->
+    <properties>
+        <spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.10</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <!-- 标识 SpringCloud 的版本 -->
+<!--    dependencyManagement 元素提供了一种管理依赖版本号的方式，此中定义的只是依赖的声明，并不实现引入，
+        因此子项目需要显式的声明需要用的依赖，子项目只需指定使用哪个依赖，无需指定版本号-->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <!-- 配置SpringCloud远程仓库 -->
+    <repositories>
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+</project>
