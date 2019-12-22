@@ -31,7 +31,7 @@ public class RibbonController {
     @GetMapping("/info")
     @IgnoreResponseAdvice
     public TemplateInfo getTemplateInfo(){
-        String url = "http://eureka-lient-coupon-template" +
+        String url = "http://eureka-client-coupon-template" +
                 "/coupon-template/info";
         return restTemplate.getForEntity(url,TemplateInfo.class).getBody();
     }
