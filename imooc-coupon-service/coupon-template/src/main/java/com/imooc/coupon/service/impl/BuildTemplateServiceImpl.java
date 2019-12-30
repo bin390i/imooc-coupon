@@ -36,6 +36,7 @@ public class BuildTemplateServiceImpl implements IBuildTemplateService {
      */
     @Override
     public CouponTemplate buildTemplate(TemplateRequest request) throws CouponException {
+        log.info("access buildTemplate serviceImpl");
         if (!request.validate()){
             throw new CouponException("BuildTemplate Param Is Not Valid!");
         }

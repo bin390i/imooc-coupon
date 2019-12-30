@@ -1,6 +1,7 @@
 package com.imooc.coupon.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.imooc.coupon.annotation.IgnoreResponseAdvice;
 import com.imooc.coupon.entity.Coupon;
 import com.imooc.coupon.exception.CouponException;
 import com.imooc.coupon.service.IUserService;
@@ -38,9 +39,12 @@ public class UserServiceController {
      * @throws CouponException
      */
     @GetMapping("/coupons")
+    @IgnoreResponseAdvice
     public List<Coupon> findCouponsByStatus(Long userId , Integer status) throws CouponException{
         log.info("find coupons by status: {} {}",userId,status);
-        return userService.findCouponsByStatus(userId,status);
+        List<Coupon> coupons = userService.findCouponsByStatus(userId, status);
+        log.debug("findCouponsByStatus response date ==> {}",JSON.toJSONString(coupons));
+        return coupons;
     }
 
     /**

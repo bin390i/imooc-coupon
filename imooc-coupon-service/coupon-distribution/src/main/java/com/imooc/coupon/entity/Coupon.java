@@ -1,5 +1,6 @@
 package com.imooc.coupon.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.imooc.coupon.constant.CouponStatus;
 import com.imooc.coupon.converter.CouponStatusConverter;

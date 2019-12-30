@@ -22,7 +22,7 @@ public class SettlementClientHystrix implements SettlementClient {
     public CommonResponse<SettlementInfo> computeRule(SettlementInfo settlementInfo) throws CouponException {
         log.error("[eureka--client-coupon-settlemet] computeRule request error");
         settlementInfo.setEmploy(false);
-        settlementInfo.setCoast(-1.0);
+        settlementInfo.setCost(-1.0);
 
         return new CommonResponse<>(-1,
                 "[eureka--client-coupon-settlemet] computeRule request error",

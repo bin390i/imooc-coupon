@@ -1,11 +1,13 @@
 package com.imooc.coupon.vo;
 
+import com.alibaba.fastjson.JSON;
 import com.imooc.coupon.constant.CouponStatus;
 import com.imooc.coupon.constant.PeriodType;
 import com.imooc.coupon.entity.Coupon;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateUtils;
 
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Slf4j
 public class CouponClassify {
 
     /** 可以使用的 */
@@ -34,6 +37,7 @@ public class CouponClassify {
      * <h2>对当前的优惠券进行分类</h2>
      * */
     public static CouponClassify classify(List<Coupon> coupons) {
+        log.debug("classify传入参数==>{}", JSON.toJSONString(coupons));
 
         List<Coupon> usable = new ArrayList<>(coupons.size());
         List<Coupon> used = new ArrayList<>(coupons.size());

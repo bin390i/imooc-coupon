@@ -13,4 +13,6 @@ public class GoodsInfo {
 
     private int count ;
 
+    private int type;
+
 }

@@ -74,9 +74,16 @@ public class UserServiceImpl implements IUserService {
     public List<Coupon> findCouponsByStatus(Long userId, Integer status) throws CouponException {
         List<Coupon> cachedCoupons = redisService.getCachedCoupons(userId, status);
         List<Coupon> preTarget;
-        if (CollectionUtils.isNotEmpty(cachedCoupons)){
-            log.debug("coupon cache is not empty:{} {}",userId,status);
-            preTarget = cachedCoupons;
+        if (CollectionUtils.isNotEmpty(cachedCoupons) &&
+            CollectionUtils.isNotEmpty(
+                    cachedCoupons.stream()
+                            .filter(c->c.getId()!=-1)
+                            .collect(Collectors.toList()))
+        ){
+            preTarget = cachedCoupons.stream()
+                    .filter(c->c.getId()!=-1)
+                    .collect(Collectors.toList());
+            log.debug("coupon cache is not empty:{} {} {}",userId,status,JSON.toJSONString(preTarget));
         }else {
             log.debug("coupon cache is empty, get coupon from db:{} {}",userId,status);
             List<Coupon> dbCoupon = couponDao.findAllByUserIdAndStatus(userId, CouponStatus.of(status));
@@ -121,6 +128,10 @@ public class UserServiceImpl implements IUserService {
                }
            }
         }
+        List<Integer> templateIds = preTarget.stream().map(Coupon::getTemplateId).collect(Collectors.toList());
+        log.debug("templateIds==> {}",JSON.toJSONString(templateIds));
+        Map<Integer, CouponTemplateSDK> templateSDKMap = this.templateClient.findIds2TemplateSDK(templateIds).getData();
+        preTarget.stream().forEach(c->c.setTemplateSDK(templateSDKMap.get(c.getTemplateId())));
         return  preTarget;
     }
 
@@ -134,9 +145,12 @@ public class UserServiceImpl implements IUserService {
     public List<CouponTemplateSDK> findAvailableTemplate(Long userId) throws CouponException {
         long curTime = new Date().getTime();
         List<CouponTemplateSDK> usableCouponTemplateSDK = templateClient.findAllUsableTemplate().getData();
+        if (CollectionUtils.isEmpty(usableCouponTemplateSDK)){
+            throw new CouponException("usableCouponTemplateSDK is empty");
+        }
         //因为由定时任务过滤已过期的优惠券模板,所以存在未同步数据,需过滤已过期的优惠券模板
         usableCouponTemplateSDK.stream()
-                .filter(t->t.getRule().getExpiration().getDeadline()>=curTime)
+                .filter(t-> t.getRule().getExpiration().getDeadline()>=curTime)
                 .collect(Collectors.toList());
         log.info("find usable template count: {}",usableCouponTemplateSDK.size());
         Map<Integer, Pair<Integer,CouponTemplateSDK>> limit2Tmplate = new HashMap<>(usableCouponTemplateSDK.size());
@@ -176,6 +190,7 @@ public class UserServiceImpl implements IUserService {
     public Coupon acquireTemplate(AcquireTemplateRequest request) throws CouponException {
         Map<Integer, CouponTemplateSDK> id2TemplateSDK =
                 templateClient.findIds2TemplateSDK(Collections.singleton(request.getTemplateSDK().getId())).getData();
+        log.info("打印数据===>{}",JSON.toJSONString(id2TemplateSDK));
         if (id2TemplateSDK.size() <= 0){
             log.error("can not acuiretemplate from templateClient:{}",request.getTemplateSDK().getId());
             throw new CouponException("can not acuiretemplate from templateClient");
@@ -226,7 +241,7 @@ public class UserServiceImpl implements IUserService {
                 goodsSum += g.getPrice() * g.getCount();
             }
             //没有优惠券,也就不存在优惠券的核销, SettlementInfo 其它字段无需修改
-            info.setCoast(retain2Decimals(goodsSum));
+            info.setCost(retain2Decimals(goodsSum));
         }
         //校验优惠券是否属于用户自己
         List<Coupon> curUserUsableCoupons = findCouponsByStatus(info.getUserId(), CouponStatus.USABLE.getCode());

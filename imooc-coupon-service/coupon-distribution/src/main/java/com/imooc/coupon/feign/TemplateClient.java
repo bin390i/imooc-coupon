@@ -1,6 +1,7 @@
 package com.imooc.coupon.feign;
 
 import com.imooc.coupon.feign.hystrix.TemplateClientHystrix;
+import com.imooc.coupon.feign.hystrix.TemplateClientHystrixFallbackFactory;
 import com.imooc.coupon.vo.CommonResponse;
 import com.imooc.coupon.vo.CouponTemplateSDK;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -15,7 +16,8 @@ import java.util.Map;
 /**
  * <h1>优惠券模板 feign 接口</h1>
  */
-@FeignClient(name = "eureka-client-coupon-template",fallback = TemplateClientHystrix.class)
+@FeignClient(name = "eureka-client-coupon-template",
+        fallbackFactory = TemplateClientHystrixFallbackFactory.class)
 public interface TemplateClient {
 
     /**

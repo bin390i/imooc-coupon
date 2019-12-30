@@ -20,7 +20,7 @@ public class SettlementInfo {
     private Boolean employ;
 
     /*折扣后的价格*/
-    private Double coast;
+    private Double cost;
 
     @Data
     @NoArgsConstructor
@@ -29,6 +29,8 @@ public class SettlementInfo {
         /** coupon id*/
         private Integer id;
 
+        /** CouponTemplateSDK */
+        private CouponTemplateSDK template;
     }
 
 

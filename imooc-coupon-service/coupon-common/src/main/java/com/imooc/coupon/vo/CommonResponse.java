@@ -2,6 +2,7 @@ package com.imooc.coupon.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -11,6 +12,7 @@ import java.util.Objects;
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class CommonResponse<T> implements Serializable {
 
     private Integer code;

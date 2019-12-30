@@ -65,8 +65,20 @@ feign:
   client:
     config:
       default:  # 全局的
-        connectTimeout: 2000  # 默认的连接超时时间是 10s
-        readTimeout: 5000
+        connectTimeout: 5000  # 默认的连接超时时间是 10s
+        readTimeout: 10000
       eureka-client-coupon-template:  # 单独服务的配置
-        connectTimeout: 3000  # 默认的连接超时时间是 10s
-        readTimeout: 5000
+        connectTimeout: 10000  # 默认的连接超时时间是 10s
+        readTimeout: 15000
+
+
+# hystrix 相关配置
+hystrix:
+  command:
+    default:  # default全局有效，service id指定应用有效
+      execution:
+        timeout:
+          enabled: true  # 是否开启超时熔断
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000 # 断路器超时时间，默认1000ms
